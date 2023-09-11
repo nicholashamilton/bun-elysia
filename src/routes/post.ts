@@ -21,6 +21,9 @@ export const postRoutes = new Elysia({ prefix: '/post' })
 
   .model(postModel)
 
+  /**
+   * Add a new post.
+   */
   .post(
     '/',
     async ({ body }) => addPost(2, body),
@@ -30,6 +33,9 @@ export const postRoutes = new Elysia({ prefix: '/post' })
     }
   )
 
+  /**
+   * Get a post by its ID.
+   */
   .get(
     '/:id',
     async ({ params }) => {
@@ -46,33 +52,38 @@ export const postRoutes = new Elysia({ prefix: '/post' })
     }
   )
 
+  /**
+   * Delete a post by its ID.
+   */
   .delete(
     '/:id',
     async ({ params }) => deletePostById(parseInt(params.id)),
     {
       error() {
-        return {
-          error: 'Issue deleting post by ID',
-        };
+        return { error: 'Issue deleting post by ID' };
       },
       response: 'publicPost',
     }
   )
 
+  /**
+   * Edit a post by its ID.
+   */
   .put(
     '/:id',
     async ({ params, body }) => editPost(parseInt(params.id), body),
     {
       error() {
-        return {
-          error: 'Issue editing post by ID',
-        };
+        return { error: 'Issue editing post by ID' };
       },
       body: 'publicPost',
       response: 'publicPost',
     }
   )
 
+  /**
+   * Search for posts based on a search query.
+   */
   .get(
     '/search',
     async ({ query }) => {
@@ -82,9 +93,7 @@ export const postRoutes = new Elysia({ prefix: '/post' })
     },
     {
       error() {
-        return {
-          error: 'Issue searching posts',
-        };
+        return { error: 'Issue searching posts' };
       },
       response: 'publicPosts',
     }

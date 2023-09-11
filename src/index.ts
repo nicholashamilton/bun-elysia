@@ -21,15 +21,15 @@ app
     path: '/api/v1/docs',
   }))
 
+  .get('/', () => name, {
+    response: t.String(),
+  })
+
   app.group('/api/v1', app => app
     .get('/', () => 'API v1')
     .use(userRoutes)
     .use(postRoutes)
   )
-
-  .get('/', () => name, {
-    response: t.String(),
-  })
 
   .get('/*', ({ set }) => {
     set.status = 404;

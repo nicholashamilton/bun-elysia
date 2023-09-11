@@ -25,23 +25,9 @@ export const userRoutes = new Elysia({ prefix: '/user' })
 
   .model(signUpModel)
 
-  .post(
-    '/sign-up',
-    async ({ body }) => signUpUser(body),
-    {
-      error({ code }) {
-        switch (code as string) {
-          case 'P2002': // Prisma P2002: "Unique constraint failed on the {constraint}"
-            return { error: 'Username must be unique' };
-          default:
-            return { error: 'Issue creating user' };
-        }
-      },
-      body: 'signUpDTO',
-      response: 'publicUser',
-    }
-  )
-
+  /**
+  * Get user's profile by username.
+  */
   .get(
     '/profile/:username',
     async (context) => {
@@ -58,6 +44,9 @@ export const userRoutes = new Elysia({ prefix: '/user' })
     }
   )
 
+  /**
+   * Search for users.
+   */
   .get(
     '/search',
     async ({ query }) => {
@@ -70,5 +59,25 @@ export const userRoutes = new Elysia({ prefix: '/user' })
         return { error: 'Issue searching users' };
       },
       response: 'publicUsers',
+    }
+  )
+
+  /**
+   * Create a new user.
+   */
+  .post(
+    '/sign-up',
+    async ({ body }) => signUpUser(body),
+    {
+      error({ code }) {
+        switch (code as string) {
+          case 'P2002': // Prisma P2002: "Unique constraint failed on the {constraint}"
+            return { error: 'Username must be unique' };
+          default:
+            return { error: 'Issue creating user' };
+        }
+      },
+      body: 'signUpDTO',
+      response: 'publicUser',
     }
   )
