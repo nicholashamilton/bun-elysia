@@ -1,34 +1,30 @@
 import { Elysia, t } from 'elysia';
 import { getProfile, getUsers, signUpUser } from '../services/user';
 
+const publicUser = t.Object({
+  id: t.Number(),
+  username: t.String(),
+});
+
+const publicUsers = t.Array(publicUser);
+
+const signUpDTO = t.Object({
+  username: t.String(),
+  password: t.String({
+    minLength: 8
+  }),
+});
+
 const signUpModel = {
-  'post:body.sign-up': t.Object({
-    username: t.String(),
-    password: t.String({
-      minLength: 8
-    })
-  }),
-  'post:response.sign-up': t.Object({
-    id: t.Number(),
-    username: t.String(),
-  }),
-
-  'get:response.profile.username': t.Object({
-    id: t.Number(),
-    username: t.String(),
-  }),
-
-  'get:response.search': t.Array(
-    t.Object({
-      id: t.Number(),
-      username: t.String(),
-    })
-  ),
+  signUpDTO,
+  publicUser,
+  publicUsers,
 };
 
 export const userRoutes = new Elysia({ prefix: '/user' })
 
   .model(signUpModel)
+
   .post(
     '/sign-up',
     async ({ body }) => signUpUser(body),
@@ -36,17 +32,13 @@ export const userRoutes = new Elysia({ prefix: '/user' })
       error({ code }) {
         switch (code as string) {
           case 'P2002': // Prisma P2002: "Unique constraint failed on the {constraint}"
-            return {
-              error: 'Username must be unique'
-            }
+            return { error: 'Username must be unique' };
           default:
-            return {
-              error: 'Issue creating user'
-            }
+            return { error: 'Issue creating user' };
         }
       },
-      body: 'post:body.sign-up',
-      response: 'post:response.sign-up',
+      body: 'signUpDTO',
+      response: 'publicUser',
     }
   )
 
@@ -59,11 +51,10 @@ export const userRoutes = new Elysia({ prefix: '/user' })
     },
     {
       error({ code }) {
-        return {
-          error: code === 'NOT_FOUND' ? 'Profile not found' : 'Issue getting profile',
-        }
+        if (code === 'NOT_FOUND') return { error: 'Profile not found' };
+        return { error: 'Issue getting profile' };
       },
-      response: 'get:response.profile.username',
+      response: 'publicUser',
     }
   )
 
@@ -76,10 +67,8 @@ export const userRoutes = new Elysia({ prefix: '/user' })
     },
     {
       error() {
-        return {
-          error: 'Issue searching users'
-        }
+        return { error: 'Issue searching users' };
       },
-      response: 'get:response.search',
+      response: 'publicUsers',
     }
   )

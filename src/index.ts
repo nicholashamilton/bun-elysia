@@ -1,6 +1,7 @@
 import { Elysia, t } from 'elysia';
 import { swagger } from '@elysiajs/swagger';
 import { userRoutes } from './routes/user';
+import { postRoutes } from './routes/post';
 
 const name = 'Bun Elysia';
 
@@ -23,6 +24,7 @@ app
   app.group('/api/v1', app => app
     .get('/', () => 'API v1')
     .use(userRoutes)
+    .use(postRoutes)
   )
 
   .get('/', () => name, {

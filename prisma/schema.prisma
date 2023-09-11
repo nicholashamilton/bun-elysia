@@ -14,4 +14,13 @@ model User {
   id       Int    @id @default(autoincrement())
   username String @unique
   password String
+  posts    Post[] // Define the one-to-many relationship with Post
+}
+
+model Post {
+  id          Int    @id @default(autoincrement())
+  title       String
+  description String
+  createdBy   User   @relation(fields: [createdById], references: [id])
+  createdById Int // Reference to the User who created this Post
 }
