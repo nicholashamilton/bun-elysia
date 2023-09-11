@@ -69,8 +69,8 @@ export const userRoutes = new Elysia({ prefix: '/user' })
     '/sign-up',
     async ({ body }) => signUpUser(body),
     {
-      error({ code }) {
-        switch (code as string) {
+      error(error) {
+        switch (error.code as string) {
           case 'P2002': // Prisma P2002: "Unique constraint failed on the {constraint}"
             return { error: 'Username must be unique' };
           default:
