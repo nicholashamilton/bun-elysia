@@ -1,15 +1,26 @@
-# Elysia with Bun runtime
+# Bun + Elysia - API Server
 
-## Getting Started
-To get started with this template, simply paste this command into your terminal:
-```bash
-bun create elysia ./elysia-example
-```
-
-## Development
+### Development
 To start the development server run:
 ```bash
 bun run dev
 ```
 
-Open http://localhost:3000/ with your browser to see the result.
+### Prisma - Postgres
+
+Set up a database using docker 
+
+```bash
+docker run -p 5432:5432 -e POSTGRES_PASSWORD=12345678 -d postgres
+```
+
+Update `.env` 
+```bash
+DATABASE_URL='postgresql://postgres:12345678@localhost:5432/db?schema=public'
+```
+
+Sync database with Prisma schema 
+
+```bash
+bunx prisma migrate dev --name init
+```
