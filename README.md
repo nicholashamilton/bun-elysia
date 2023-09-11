@@ -24,3 +24,7 @@ Sync database with Prisma schema
 ```bash
 bunx prisma migrate dev --name init
 ```
+
+### Swagger Plugin
+
+Endpoints generated from Elysia server: `/api/v1/docs`.
